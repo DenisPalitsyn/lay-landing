@@ -7,7 +7,11 @@
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
-      ]
+      ],
+      "rewrites": [{
+        "source": "**",
+        "destination": "/index.html"
+      }]
     },
     {
       "target": "admin",
@@ -16,7 +20,11 @@
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
-      ]
+      ],
+      "rewrites": [{
+        "source": "**",
+        "destination": "/index.html"
+      }]
     }
   ],
   "functions": {
