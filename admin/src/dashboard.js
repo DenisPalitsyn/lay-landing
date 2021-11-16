@@ -12,33 +12,61 @@ import {
     TableRow
 } from "@mui/material";
 import {format} from "date-fns";
+import {getAuth} from "firebase/auth";
 
 const Dashboard = () => {
     const firestore = getFirestore();
+    const auth = getAuth();
     const usersCollection = collection(firestore, 'users');
 
     const [users, setUsers] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [status, setStatus] = useState('loading');
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
+        const checkAdmin = async () => {
+            return auth.currentUser.getIdTokenResult();
+        }
+        checkAdmin()
+            .then(token => {
+                setIsAdmin(token.claims.admin);
+                setStatus(token.claims.admin ? 'loading' : 'You are not admin');
+            })
+            .catch(e => setStatus(e.message));
+    }, [auth]);
+
+    useEffect(() => {
+        if (isAdmin) {
+            const fetchData = async () => {
                 const data = await getDocs(usersCollection);
                 const usersData = [];
-
                 data.forEach((doc) => {
                     usersData.push(doc.data());
                 });
                 return usersData.sort((a, b) => b.date - a.date);
-            } catch (e) {
-                console.log(e.message);
             }
+            fetchData()
+                .then(setUsers)
+                .catch(e => setStatus(e.message))
+                .finally(() => setStatus(''));
         }
-        fetchData().then(setUsers);
-    }, [usersCollection])
+    }, [isAdmin, usersCollection])
+
+    const renderContent = () => {
+        if (status === 'loading') {
+            return <p>Loading...</p>;
+        }
+        if (status) {
+            return <p>{status}</p>;
+        }
+        if (status === '') {
+            return <UsersTable users={users}/>;
+        }
+    }
 
     return (
         <div style={{margin: '10vh auto', width: 700}}>
-            {users ? <UsersTable users={users}/> : <p>Loading...</p>}
+            {renderContent()}
         </div>
     );
 }
