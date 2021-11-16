@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "lay-landing-d1882"
+  },
+  "targets": {
+    "lay-landing-d1882": {
+      "hosting": {
+        "landing": [
+          "lay-landing"
+        ],
+        "admin": [
+          "admin-lay-landing"
+        ]
+      }
+    }
   }
 }
