@@ -2,7 +2,7 @@
   "hosting": [
     {
       "target": "landing",
-      "public": "app/public",
+      "public": "app/build",
       "ignore": [
         "firebase.json",
         "**/.*",
@@ -11,7 +11,7 @@
     },
     {
       "target": "admin",
-      "public": "admin/public",
+      "public": "admin/build",
       "ignore": [
         "firebase.json",
         "**/.*",
